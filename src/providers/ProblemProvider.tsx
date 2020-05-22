@@ -1,5 +1,6 @@
-import React, {createContext, Dispatch, ReactElement, ReactNode, useReducer} from 'react';
-import problems from '../storage/data.json';
+import React, {createContext, Dispatch, ReactElement, ReactNode, useEffect, useReducer} from 'react';
+// import problems from '../storage/data.json';
+import {loadState, saveState} from "../utils/localStorage";
 
 type Platform = 'leetcode' | 'codility';
 type DifficultyLeetCode = 'easy' | 'medium' | 'hard';
@@ -21,14 +22,20 @@ export interface Problem {
 type ActionType = { type: 'addProblem', payload: Problem }
   | { type: 'deleteProblem', payload: string }
   | { type: 'updateProblem', payload: Problem }
+  | { type: 'deleteSelectedProblem', payload: string }
 
 interface StateType {
+  selectedProblems: Array<Problem>;
   problems: Array<Problem>;
   dispatch?: Dispatch<ActionType>;
 }
 
+const problems = loadState();
+console.log(problems);
+
 const initialState: StateType = {
-  problems: problems
+  selectedProblems: [],
+  problems: problems === undefined ? [] : problems,
 }
 
 const reducer = (state: StateType, action: ActionType): StateType => {
@@ -55,6 +62,20 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         }
       }
       return state;
+    case "deleteSelectedProblem":
+      if (action.payload) {
+        const p = state.selectedProblems.find(e => e.index === action.payload);
+        if (p !== undefined) {
+          const index = state.selectedProblems.indexOf(p);
+          const problemsCopy = [...state.selectedProblems];
+          problemsCopy.splice(index, 1);
+          return {
+            ...state,
+            selectedProblems: problemsCopy
+          }
+        }
+      }
+      return state;
     case "updateProblem":
       if (action.payload) {
         const p = state.problems.find(element => element.index === action.payload.index);
@@ -69,6 +90,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         }
       }
       return state;
+
     default:
       return state;
   }
@@ -76,7 +98,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 
 export const ProblemsContext = createContext(initialState)
 
-export const ProblemsProvider = ({children} : {children: ReactNode}): ReactElement => {
+export const ProblemsProvider = ({children}: { children: ReactNode }): ReactElement => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (

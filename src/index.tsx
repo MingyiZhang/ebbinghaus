@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {ProblemsProvider} from "./providers/ProblemProvider";
+import {DialogStateProvider} from "./providers/DialogStateProvider";
 
 ReactDOM.render(
   <React.StrictMode>
     <ProblemsProvider>
-      <App />
+      <DialogStateProvider>
+        <App />
+      </DialogStateProvider>
     </ProblemsProvider>
   </React.StrictMode>,
   document.getElementById('root')
