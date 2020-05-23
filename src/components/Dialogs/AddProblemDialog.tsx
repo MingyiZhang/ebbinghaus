@@ -39,6 +39,11 @@ const AddProblemDialog = () => {
         payload: false,
       });
     }
+    setPlatform(0);
+    setSerial("");
+    setName("");
+    setDifficulty(0);
+    setTime(null);
   };
 
   const handleChange = <T extends any>(setter: Dispatch<SetStateAction<T>>) => {
