@@ -6,6 +6,8 @@ import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import {DialogStateContext} from "../providers/DialogStateProvider";
+import {ProblemsContext} from "../providers/ProblemProvider";
+import {selectProblems} from "../utils/ebbinghaus";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,6 +30,7 @@ const QuickAccessButton = () => {
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
   const {dispatch} = useContext(DialogStateContext);
+  const {problems, dispatch: dispatchProblem} = useContext(ProblemsContext);
 
   const handleClose = () => {
     setOpen(false);
@@ -42,6 +45,21 @@ const QuickAccessButton = () => {
       dispatch({
         type: "toggleAddProblem",
         payload: true,
+      });
+    }
+  };
+
+  const handleRefreshProblem = () => {
+    if (dispatchProblem) {
+      dispatchProblem({
+        type: "updateWeightsNormCumulated",
+      });
+    }
+    const selected = selectProblems(problems, 3);
+    if (dispatchProblem) {
+      dispatchProblem({
+        type: "addSelectedProblems",
+        payload: selected
       });
     }
   };
@@ -70,6 +88,7 @@ const QuickAccessButton = () => {
           icon={<AutorenewIcon/>}
           tooltipTitle='Refresh Problem'
           onClick={() => {
+            handleRefreshProblem();
             handleClose();
           }}
         />

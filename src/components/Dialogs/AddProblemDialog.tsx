@@ -1,4 +1,4 @@
-import React, {ChangeEvent, SetStateAction, useContext, useState, Dispatch, ReactNode} from 'react';
+import React, {ChangeEvent, Dispatch, SetStateAction, useContext, useState} from 'react';
 import {DialogStateContext} from "../../providers/DialogStateProvider";
 import {
   Button,
@@ -6,7 +6,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid, IconButton, InputAdornment,
+  Grid,
+  IconButton,
+  InputAdornment,
   MenuItem,
   TextField,
   useMediaQuery,
@@ -24,10 +26,10 @@ const AddProblemDialog = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [platform, setPlatform] = useState<string>("leetcode");
+  const [platform, setPlatform] = useState<number>(0);
   const [serial, setSerial] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [difficulty, setDifficulty] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<number>(0);
   const [time, setTime] = useState<Date | null>(null);
 
   const handleClose = () => {
@@ -39,25 +41,6 @@ const AddProblemDialog = () => {
     }
   };
 
-  const getDifficulties = (platform: string): ReactNode => {
-    if (platform === 'leetcode') {
-      return (
-        <div>
-          <MenuItem value={"easy"}>Easy</MenuItem>
-          <MenuItem value={"medium"}>Medium</MenuItem>
-          <MenuItem value={"hard"}>Hard</MenuItem>
-        </div>
-      )
-    } else if (platform === 'codility') {
-      return (
-        <div>
-          <MenuItem value={"painless"}>Painless</MenuItem>
-          <MenuItem value={"respectable"}>Respectable</MenuItem>
-        </div>
-      )
-    }
-  }
-
   const handleChange = <T extends any>(setter: Dispatch<SetStateAction<T>>) => {
     return (event: ChangeEvent<{ value: unknown }>) => {
       setter(event.target.value as T);
@@ -65,19 +48,21 @@ const AddProblemDialog = () => {
   };
 
   const handleAdd = () => {
-    const currentTime = new Date();
-    const createTime = time === null ? currentTime : time;
+    const currentTime = new Date().getTime();
+    const createTime = time === null ? currentTime : time.getTime();
 
     const problem: Problem = {
       platform: platform,
-      name: serial + " " + name,
+      serial: serial,
+      name: name,
       index: (serial + name).replace(" ", "").toLowerCase(),
       practice: 1,
       remember: 1,
       difficulty: difficulty,
-      createTime: createTime.toISOString(),
-      updateTime: createTime.toISOString(),
+      createTime: createTime,
+      updateTime: createTime,
       weight: getWeight(currentTime, createTime, 1, 1),
+      normCumulatedWeight: 0
     };
     if (problemDispatch) {
       problemDispatch({
@@ -85,14 +70,12 @@ const AddProblemDialog = () => {
         payload: problem
       });
     }
-
-    console.log(problem);
   }
 
   return (
 
     <Dialog
-      fullWidth
+      // fullWidth
       fullScreen={fullScreen}
       open={addProblemDialogOpen}
       onClose={handleClose}
@@ -112,8 +95,8 @@ const AddProblemDialog = () => {
               onChange={handleChange(setPlatform)}
               select
             >
-              <MenuItem value={"leetcode"}>LeetCode</MenuItem>
-              <MenuItem value={"codility"}>Codility</MenuItem>
+              <MenuItem value={0}>LeetCode</MenuItem>
+              <MenuItem value={1}>Codility</MenuItem>
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -122,7 +105,7 @@ const AddProblemDialog = () => {
               fullWidth
               required
               variant={"outlined"}
-              label={platform === "leetcode" ? "Serial Number" : "Lesson Number"}
+              label={platform === 0 ? "Serial Number" : "Lesson Number"}
               value={serial}
               onChange={handleChange(setSerial)}
             />
@@ -140,7 +123,7 @@ const AddProblemDialog = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             {
-              platform === 'leetcode' &&
+              platform === 0 &&
               <TextField
                 id={"difficulty"}
                 fullWidth
@@ -151,13 +134,13 @@ const AddProblemDialog = () => {
                 onChange={handleChange(setDifficulty)}
                 select
               >
-                <MenuItem value={"easy"}>Easy</MenuItem>
-                <MenuItem value={"medium"}>Medium</MenuItem>
-                <MenuItem value={"hard"}>Hard</MenuItem>
+                <MenuItem value={0}>Easy</MenuItem>
+                <MenuItem value={1}>Medium</MenuItem>
+                <MenuItem value={2}>Hard</MenuItem>
               </TextField>
             }
             {
-              platform === 'codility' &&
+              platform === 1 &&
               <TextField
                 id={"difficulty"}
                 fullWidth
@@ -168,8 +151,8 @@ const AddProblemDialog = () => {
                 onChange={handleChange(setDifficulty)}
                 select
               >
-                <MenuItem value={"painless"}>Painless</MenuItem>
-                <MenuItem value={"respectable"}>Respectable</MenuItem>
+                <MenuItem value={4}>Painless</MenuItem>
+                <MenuItem value={5}>Respectable</MenuItem>
               </TextField>
             }
           </Grid>
@@ -216,7 +199,7 @@ const AddProblemDialog = () => {
         </Button>
         <Button
           onClick={() => {
-            if (platform && serial && name && difficulty) {
+            if (serial && name) {
               handleAdd();
               handleClose();
             }

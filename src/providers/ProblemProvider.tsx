@@ -1,6 +1,6 @@
-import React, {createContext, Dispatch, ReactElement, ReactNode, useEffect, useReducer} from 'react';
-// import problems from '../storage/data.json';
-import {loadState, saveState} from "../utils/localStorage";
+import React, {createContext, Dispatch, ReactElement, ReactNode, useReducer} from 'react';
+import {loadState} from "../utils/localStorage";
+import {selectProblems, updateWeightsNormCumulated} from "../utils/ebbinghaus";
 
 type Platform = 'leetcode' | 'codility';
 type DifficultyLeetCode = 'easy' | 'medium' | 'hard';
@@ -8,21 +8,26 @@ type DifficultyCodility = 'painless' | 'respectable'
 type Difficulty = DifficultyLeetCode | DifficultyCodility;
 
 export interface Problem {
-  platform: string;
+  platform: number;
+  serial: string;
   index: string;
   name: string;
-  createTime: string;
-  updateTime: string;
+  createTime: number;
+  updateTime: number;
   practice: number;
   remember: number;
   weight: number;
-  difficulty: string;
+  difficulty: number;
+  normCumulatedWeight: number;
 }
 
 type ActionType = { type: 'addProblem', payload: Problem }
+  | { type: 'addProblems', payload: Problem[] }
+  | { type: 'addSelectedProblems', payload: Problem[] }
   | { type: 'deleteProblem', payload: string }
   | { type: 'updateProblem', payload: Problem }
   | { type: 'deleteSelectedProblem', payload: string }
+  | { type: 'updateWeightsNormCumulated' };
 
 interface StateType {
   selectedProblems: Array<Problem>;
@@ -30,12 +35,16 @@ interface StateType {
   dispatch?: Dispatch<ActionType>;
 }
 
+export const platform = ["LeetCode", "Codility"];
+export const difficulty = ["Easy", "Medium", "Hard", "Painless", "Respectable"];
+
 const problems = loadState();
-console.log(problems);
+updateWeightsNormCumulated(problems);
+const selectedProblems = selectProblems(problems, 3);
 
 const initialState: StateType = {
-  selectedProblems: [],
-  problems: problems === undefined ? [] : problems,
+  selectedProblems: selectedProblems,
+  problems: problems,
 }
 
 const reducer = (state: StateType, action: ActionType): StateType => {
@@ -48,6 +57,22 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         ...state,
         problems: [...state.problems, action.payload]
       }
+    case "addProblems":
+      if (action.payload) {
+        return {
+          ...state,
+          problems: action.payload
+        }
+      }
+      return state;
+    case "addSelectedProblems":
+      if (action.payload) {
+        return {
+          ...state,
+          selectedProblems: action.payload
+        }
+      }
+      return state;
     case "deleteProblem":
       if (action.payload) {
         const p = state.problems.find(element => element.index === action.payload);
@@ -90,7 +115,13 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         }
       }
       return state;
-
+    case "updateWeightsNormCumulated":
+      const problemsCopy = [...state.problems];
+      updateWeightsNormCumulated(problemsCopy);
+      return {
+        ...state,
+        problems: problemsCopy
+      }
     default:
       return state;
   }
