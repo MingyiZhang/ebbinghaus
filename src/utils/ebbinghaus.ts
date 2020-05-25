@@ -1,7 +1,7 @@
 import {Problem} from "../providers/ProblemProvider";
 
 export const getWeight = (tc: number, t0: number, practice: number, remember: number): number => {
-  const dt = (tc - t0) / 3600000;
+  const dt = (tc - t0) / 43200000;
   return 1 - Math.exp(- dt / (practice + remember));
 };
 
