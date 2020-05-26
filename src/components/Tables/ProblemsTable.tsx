@@ -64,15 +64,6 @@ const ProblemsTable = (props: ProblemsTableProps): ReactElement => {
   return (
     <TableContainer component={Paper}>
       <Table>
-        {/*<TableHead>*/}
-        {/*  <TableRow>*/}
-        {/*    <TableCell>Platform</TableCell>*/}
-        {/*    <TableCell>Problem</TableCell>*/}
-        {/*    <TableCell># Practice</TableCell>*/}
-        {/*    <TableCell># Remembered</TableCell>*/}
-        {/*    <TableCell>Difficulty</TableCell>*/}
-        {/*  </TableRow>*/}
-        {/*</TableHead>*/}
         <TableBody>
           {props.problems.map(p => (
             <TableRow key={p.index}>

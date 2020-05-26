@@ -1,7 +1,7 @@
 # Ebbinghaus for LeetCode and Codility
 
-This app will select problems from LeetCode and Codility based on the Ebbinghaus forgetting curve.
-The lower the retrievability, the higher probability the problem will be selected. 
+This app will select up to three problems from LeetCode and Codility based on the [Ebbinghaus' forgetting curve](https://en.wikipedia.org/wiki/Forgetting_curve).
+The lower the receivability, the higher probability the problem will be selected. 
 
 ## How to use
 ```shell script
