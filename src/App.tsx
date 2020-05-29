@@ -1,43 +1,78 @@
 import React, {useContext, useEffect} from 'react';
 import './App.css';
 import {ProblemsContext} from "./providers/ProblemProvider";
-import ProblemsTable from "./components/Tables/ProblemsTable";
-import {Grid, Typography} from "@material-ui/core";
+import {Container, Grid, Theme, Typography} from "@material-ui/core";
 import QuickAccessButton from "./components/QuickAccessButton";
 import AddProblemDialog from "./components/Dialogs/AddProblemDialog";
 import {saveState} from "./utils/localStorage";
-import SelectedProblemsTable from "./components/Tables/SelectedProblemsTable";
+import ProblemCard from "./components/Cards/ProblemCard";
+import {makeStyles} from "@material-ui/core/styles";
+import SelectedProblemCard from "./components/Cards/SelectedProblemCard";
 
-function App() {
+const useStyles = makeStyles((theme: Theme) => ({
+  heroContent: {
+    // backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6)
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8)
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+}));
+
+const App = () => {
+  const classes = useStyles();
   const {problems, selectedProblems} = useContext(ProblemsContext);
 
   useEffect(() => {
     console.log("save to local storage")
     saveState(problems);
   }, [problems])
-  
+
   return (
     <div className="App">
-      <Grid container spacing={3} direction="column" justify="center" alignItems="center">
-        <Grid item xs={11} sm={6}>
-          <Typography variant={"h5"} component={"h2"}>
-            Selected Problems
-          </Typography>
+      <Container className={classes.heroContent} maxWidth="sm">
+        <Typography component="h1" variant="h2" align="center" gutterBottom>
+          Selected Problems
+        </Typography>
+      </Container>
+      <Container className={classes.cardGrid} maxWidth="md">
+        <Grid container spacing={4}>
+          {selectedProblems.map(p => (
+            <Grid item key={p.index} xs={12} sm={6} md={4}>
+              <SelectedProblemCard problem={p}/>
+            </Grid>
+          ))}
         </Grid>
-        <Grid item xs={11} sm={6}>
-          <SelectedProblemsTable problems={selectedProblems}/>
+      </Container>
+      <Container className={classes.heroContent} maxWidth="sm">
+        <Typography component="h1" variant="h2" align="center" gutterBottom>
+          Problems
+        </Typography>
+      </Container>
+      <Container className={classes.cardGrid} maxWidth="md">
+        <Grid container spacing={4}>
+          {problems.map(p => (
+            <Grid item key={p.index} xs={12} sm={6} md={4}>
+              <ProblemCard problem={p}/>
+            </Grid>
+          ))}
         </Grid>
-        <Grid item xs={11} sm={6}>
-          <Typography variant={"h5"} component={"h2"}>
-            Problems
-          </Typography>
-        </Grid>
-        <Grid item xs={11} sm={6}>
-          <ProblemsTable problems={problems}/>
-        </Grid>
-      </Grid>
+      </Container>
       <QuickAccessButton/>
       <AddProblemDialog/>
+
     </div>
   );
 }

@@ -10,7 +10,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ProblemsProvider>
       <DialogStateProvider>
-        <App />
+        <App/>
       </DialogStateProvider>
     </ProblemsProvider>
   </React.StrictMode>,
