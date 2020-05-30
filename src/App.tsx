@@ -2,17 +2,21 @@ import React, {useContext, useEffect} from 'react';
 import './App.css';
 import {ProblemsContext} from "./providers/ProblemProvider";
 import {Container, Grid, Theme, Typography} from "@material-ui/core";
-import QuickAccessButton from "./components/QuickAccessButton";
+import QuickAccessButton from "./components/Buttons/QuickAccessButton";
 import AddProblemDialog from "./components/Dialogs/AddProblemDialog";
 import {saveState} from "./utils/localStorage";
 import ProblemCard from "./components/Cards/ProblemCard";
 import {makeStyles} from "@material-ui/core/styles";
 import SelectedProblemCard from "./components/Cards/SelectedProblemCard";
+import SortProblemsDialog from "./components/Dialogs/SortProblemsDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   heroContent: {
     // backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6)
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4)
   },
   cardGrid: {
     paddingTop: theme.spacing(8),
@@ -72,7 +76,7 @@ const App = () => {
       </Container>
       <QuickAccessButton/>
       <AddProblemDialog/>
-
+      <SortProblemsDialog/>
     </div>
   );
 }

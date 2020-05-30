@@ -1,14 +1,17 @@
 import React, {createContext, Dispatch, ReactElement, ReactNode, useReducer} from 'react';
 
 type ActionType = { type: 'toggleAddProblem', payload: boolean }
+  | { type: 'toggleSortProblems', payload: boolean };
 
 interface StateType {
   addProblemDialogOpen: boolean;
+  sortProblemsDialogOpen: boolean;
   dispatch?: Dispatch<ActionType>;
 }
 
 const initialState: StateType = {
-  addProblemDialogOpen: false
+  addProblemDialogOpen: false,
+  sortProblemsDialogOpen: false,
 };
 
 const reducer = (state: StateType, action: ActionType): StateType => {
@@ -18,6 +21,11 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         ...state,
         addProblemDialogOpen: action.payload
       };
+    case "toggleSortProblems":
+      return {
+        ...state,
+        sortProblemsDialogOpen: action.payload
+      }
     default:
       return state;
   }

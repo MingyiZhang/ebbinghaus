@@ -21,22 +21,42 @@ export interface Problem {
   normCumulatedWeight: number;
 }
 
+export type sortEntry = "platform" | "serial" | "name" | "practice" | "remember" | "weight" | "difficulty";
+
+interface SortType {
+  sortEntry: sortEntry;
+  isReverse: boolean;
+}
+
 type ActionType = { type: 'addProblem', payload: Problem }
   | { type: 'addProblems', payload: Problem[] }
   | { type: 'addSelectedProblems', payload: Problem[] }
   | { type: 'deleteProblem', payload: string }
   | { type: 'updateProblem', payload: Problem }
   | { type: 'deleteSelectedProblem', payload: string }
-  | { type: 'updateWeightsNormCumulated' };
+  | { type: 'updateWeightsNormCumulated' }
+  | { type: 'sortProblems', payload: SortType };
 
 interface StateType {
   selectedProblems: Array<Problem>;
   problems: Array<Problem>;
+  sortEntry: sortEntry;
+  isReverse: boolean;
   dispatch?: Dispatch<ActionType>;
 }
 
 export const platform = ["LeetCode", "Codility"];
 export const difficulty = ["Easy", "Medium", "Hard", "Painless", "Respectable"];
+export const sortEntries: sortEntry[] = ["platform", "serial", "name", "practice", "remember", "weight", "difficulty"];
+export const sortEntryLabels = {
+  platform: "Platform",
+  serial: "Serial",
+  name: "Problem Name",
+  practice: "Number of Practices",
+  remember: "Number of Remembered",
+  weight: "Memory Intensity",
+  difficulty: "Difficulty"
+}
 
 const problems = loadState();
 updateWeightsNormCumulated(problems);
@@ -45,7 +65,9 @@ const selectedProblems = selectProblems(problems, 3);
 const initialState: StateType = {
   selectedProblems: selectedProblems,
   problems: problems,
-}
+  sortEntry: "platform",
+  isReverse: false,
+};
 
 const reducer = (state: StateType, action: ActionType): StateType => {
   switch (action.type) {
@@ -56,13 +78,13 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       return {
         ...state,
         problems: [...state.problems, action.payload]
-      }
+      };
     case "addProblems":
       if (action.payload) {
         return {
           ...state,
           problems: action.payload
-        }
+        };
       }
       return state;
     case "addSelectedProblems":
@@ -70,7 +92,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
         return {
           ...state,
           selectedProblems: action.payload
-        }
+        };
       }
       return state;
     case "deleteProblem":
@@ -83,7 +105,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
           return {
             ...state,
             problems: problemsCopy
-          }
+          };
         }
       }
       return state;
@@ -97,7 +119,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
           return {
             ...state,
             selectedProblems: problemsCopy
-          }
+          };
         }
       }
       return state;
@@ -111,7 +133,7 @@ const reducer = (state: StateType, action: ActionType): StateType => {
           return {
             ...state,
             problems: problemsCopy
-          }
+          };
         }
       }
       return state;
@@ -121,7 +143,26 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       return {
         ...state,
         problems: problemsCopy
+      };
+    case "sortProblems":
+      const sortEntry = action.payload.sortEntry;
+      const isReverse = action.payload.isReverse;
+      const alpha = isReverse ? -1 : 1;
+      if (sortEntry !== state.sortEntry || isReverse !== state.isReverse) {
+        const sortedProblems = state.problems.sort((p1, p2) => {
+          if (sortEntry === "serial" && p1.platform === 0 && p2.platform === 0) {
+            return alpha * (parseInt(p1[sortEntry]) - parseInt(p2[sortEntry]));
+          }
+          return p1[sortEntry] < p2[sortEntry] ? -alpha : alpha;
+        });
+        return {
+          ...state,
+          problems: sortedProblems,
+          sortEntry: sortEntry,
+          isReverse: isReverse,
+        };
       }
+      return state;
     default:
       return state;
   }

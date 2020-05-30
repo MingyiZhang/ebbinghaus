@@ -75,7 +75,7 @@ const AddProblemDialog = () => {
         payload: problem
       });
     }
-  }
+  };
 
   return (
 
@@ -84,9 +84,9 @@ const AddProblemDialog = () => {
       fullScreen={fullScreen}
       open={addProblemDialogOpen}
       onClose={handleClose}
-      aria-labelledby="responsive-dialog-title"
+      aria-labelledby="add-problem-dialog"
     >
-      <DialogTitle id="responsive-dialog-title">{"Add New Problem"}</DialogTitle>
+      <DialogTitle id="add-problem-dialog-title">{"Add New Problem"}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} justify={"center"} alignItems={"center"}>
           <Grid item xs={12} sm={6}>

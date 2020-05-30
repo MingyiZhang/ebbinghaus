@@ -5,13 +5,14 @@ import AutorenewIcon from '@material-ui/icons/Autorenew';
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
-import {DialogStateContext} from "../providers/DialogStateProvider";
-import {Problem, ProblemsContext} from "../providers/ProblemProvider";
-import {selectProblems} from "../utils/ebbinghaus";
+import {DialogStateContext} from "../../providers/DialogStateProvider";
+import {Problem, ProblemsContext} from "../../providers/ProblemProvider";
+import {selectProblems} from "../../utils/ebbinghaus";
 
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
-import {downloadToJson} from "../utils/localStorage";
+import {downloadToJson} from "../../utils/localStorage";
+import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,7 +53,7 @@ const QuickAccessButton = () => {
     }
   };
 
-  const handleRefreshProblem = () => {
+  const handleRefreshSelectedProblems = () => {
     if (dispatchProblem) {
       dispatchProblem({
         type: "updateWeightsNormCumulated",
@@ -63,6 +64,15 @@ const QuickAccessButton = () => {
       dispatchProblem({
         type: "addSelectedProblems",
         payload: selected
+      });
+    }
+  };
+
+  const handleSortProblemsDialog = () => {
+    if (dispatch) {
+      dispatch({
+        type: "toggleSortProblems",
+        payload: true,
       });
     }
   };
@@ -99,9 +109,8 @@ const QuickAccessButton = () => {
   return (
     <div>
       <SpeedDial
-        ariaLabel="SpeedDial example"
+        ariaLabel="Quick Access"
         className={classes.speedDial}
-
         icon={<SpeedDialIcon/>}
         onClose={handleClose}
         onOpen={handleOpen}
@@ -117,12 +126,21 @@ const QuickAccessButton = () => {
           }}
         />
         <SpeedDialAction
-          title='Refresh Problem'
+          title='Refresh Selected Problems'
           icon={<AutorenewIcon/>}
-          tooltipTitle='Refresh Problem'
+          tooltipTitle='Refresh Selected Problems'
           onClick={() => {
             handleClose();
-            handleRefreshProblem();
+            handleRefreshSelectedProblems();
+          }}
+        />
+        <SpeedDialAction
+          title={'Sort Problems'}
+          icon={<SortByAlphaIcon/>}
+          tooltipTitle={'Sort Problems'}
+          onClick={() => {
+            handleClose();
+            handleSortProblemsDialog();
           }}
         />
         <SpeedDialAction
