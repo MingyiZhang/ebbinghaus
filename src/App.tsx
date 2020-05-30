@@ -46,20 +46,26 @@ const App = () => {
 
   return (
     <div className="App">
-      <Container className={classes.heroContent} maxWidth="sm">
-        <Typography component="h1" variant="h2" align="center" gutterBottom>
-          Selected Problems
-        </Typography>
-      </Container>
-      <Container className={classes.cardGrid} maxWidth="md">
-        <Grid container spacing={4}>
-          {selectedProblems.map(p => (
-            <Grid item key={p.index} xs={12} sm={6} md={4}>
-              <SelectedProblemCard problem={p}/>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+      {
+        selectedProblems.length !== 0 &&
+        <Container className={classes.heroContent} maxWidth="sm">
+          <Typography component="h1" variant="h2" align="center" gutterBottom>
+            Selected Problems
+          </Typography>
+        </Container>
+      }
+      {
+        selectedProblems.length !== 0 &&
+        <Container className={classes.cardGrid} maxWidth="md">
+          <Grid container spacing={4}>
+            {selectedProblems.map(p => (
+              <Grid item key={p.index} xs={12} sm={6} md={4}>
+                <SelectedProblemCard problem={p}/>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      }
       <Container className={classes.heroContent} maxWidth="sm">
         <Typography component="h1" variant="h2" align="center" gutterBottom>
           Problems
