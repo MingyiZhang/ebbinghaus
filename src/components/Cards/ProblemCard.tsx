@@ -1,48 +1,27 @@
 import React, {useContext} from 'react';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import {createStyles, makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import {difficulty, platform, Problem, ProblemsContext} from "../../providers/ProblemProvider";
-import {ButtonGroup, IconButton, LinearProgress, Tooltip} from "@material-ui/core";
+import {Problem, ProblemsContext} from "../../providers/ProblemProvider";
+import {ButtonGroup, IconButton, Tooltip} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import ProblemCardContent, {ProblemCardProps} from "./ProblemCardContent";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     card: {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
     },
-    bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-    },
-    title: {
-      fontSize: 14,
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    content: {
-      textAlign: "left",
-
-    }
   })
 );
 
-interface ProblemCardProps {
-  problem: Problem;
-}
-
 const ProblemCard = (props: ProblemCardProps) => {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
   const problem = props.problem;
 
   const {dispatch} = useContext(ProblemsContext);
@@ -86,18 +65,7 @@ const ProblemCard = (props: ProblemCardProps) => {
 
   return (
     <Card className={classes.card}>
-      <CardContent className={classes.content}>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          {platform[problem.platform]}{bull}{problem.serial}
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {problem.name}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {difficulty[problem.difficulty]}
-        </Typography>
-        <LinearProgress variant="determinate" value={(1 - problem.weight) * 100} style={{height: 10}}/>
-      </CardContent>
+      <ProblemCardContent problem={problem}/>
       <CardActions>
         <ButtonGroup>
           <IconButton
