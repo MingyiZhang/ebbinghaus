@@ -150,10 +150,11 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       const alpha = isReverse ? -1 : 1;
       if (sortEntry !== state.sortEntry || isReverse !== state.isReverse) {
         const sortedProblems = state.problems.sort((p1, p2) => {
-          if (sortEntry === "serial" && p1.platform === 0 && p2.platform === 0) {
-            return alpha * (parseInt(p1[sortEntry]) - parseInt(p2[sortEntry]));
+          let less = p1[sortEntry] < p2[sortEntry];
+          if (sortEntry === "serial") {
+            less = p1[sortEntry].length < p2[sortEntry].length || (p1[sortEntry].length === p2[sortEntry].length && p1[sortEntry] < p2[sortEntry]);
           }
-          return p1[sortEntry] < p2[sortEntry] ? -alpha : alpha;
+          return less ? -alpha : alpha;
         });
         return {
           ...state,
