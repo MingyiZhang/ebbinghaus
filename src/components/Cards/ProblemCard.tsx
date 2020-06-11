@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {createStyles, makeStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
-import {Problem, ProblemsContext} from "../../providers/ProblemProvider";
+import {ProblemDisplay, ProblemsContext} from "../../providers/ProblemProvider";
 import {ButtonGroup, IconButton, Tooltip} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
@@ -39,7 +39,7 @@ const ProblemCard = (props: ProblemCardProps) => {
     }
   };
 
-  const handleUpdate = (p: Problem, button: "remembered" | "fail-to-remember" | "reset") => {
+  const handleUpdate = (p: ProblemDisplay, button: "remembered" | "fail-to-remember" | "reset") => {
     p.updateTime = new Date().getTime();
     p.weight = 0;
     switch (button) {

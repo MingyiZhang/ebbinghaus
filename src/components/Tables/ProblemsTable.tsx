@@ -1,5 +1,5 @@
 import React, {ReactElement, useContext} from 'react';
-import {difficulty, platform, Problem, ProblemsContext} from "../../providers/ProblemProvider";
+import {difficulty, platform, ProblemDisplay, ProblemsContext} from "../../providers/ProblemProvider";
 import {
   ButtonGroup,
   IconButton,
@@ -17,7 +17,7 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 
 interface ProblemsTableProps {
-  problems: Problem[];
+  problems: ProblemDisplay[];
 }
 
 const ProblemsTable = (props: ProblemsTableProps): ReactElement => {
@@ -37,7 +37,7 @@ const ProblemsTable = (props: ProblemsTableProps): ReactElement => {
     }
   };
 
-  const handleUpdate = (p: Problem, button: "remembered" | "fail-to-remember" | "reset") => {
+  const handleUpdate = (p: ProblemDisplay, button: "remembered" | "fail-to-remember" | "reset") => {
     p.updateTime = new Date().getTime();
     p.weight = 0;
     switch (button) {
@@ -69,7 +69,7 @@ const ProblemsTable = (props: ProblemsTableProps): ReactElement => {
             <TableRow key={p.index}>
               <TableCell>{platform[p.platform]}</TableCell>
               <TableCell>{p.serial}</TableCell>
-              <TableCell>{p.name}</TableCell>
+              <TableCell>{p.title}</TableCell>
               <TableCell>{difficulty[p.difficulty]}</TableCell>
               <TableCell>{(1 - p.weight).toFixed(2)}</TableCell>
               {/*<TableCell><LinearProgress variant="determinate" value={10} /></TableCell>*/}

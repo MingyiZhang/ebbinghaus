@@ -9,6 +9,7 @@ import ProblemCard from "./components/Cards/ProblemCard";
 import {makeStyles} from "@material-ui/core/styles";
 import SelectedProblemCard from "./components/Cards/SelectedProblemCard";
 import SortProblemsDialog from "./components/Dialogs/SortProblemsDialog";
+import {ChoicesContext} from "./providers/ChoiceProvider";
 
 const useStyles = makeStyles((theme: Theme) => ({
   heroContent: {
@@ -38,11 +39,31 @@ const useStyles = makeStyles((theme: Theme) => ({
 const App = () => {
   const classes = useStyles();
   const {problems, selectedProblems} = useContext(ProblemsContext);
+  const {dispatch} = useContext(ChoicesContext);
 
   useEffect(() => {
     console.log("save to local storage")
     saveState(problems);
   }, [problems])
+
+  useEffect(() => {
+    if (dispatch) {
+      fetch('/api/problems/algorithms/')
+        .then(resp => resp.json())
+        .then(data => data["stat_status_pairs"])
+        .then(choices => dispatch({
+            type: "addLeetCodeChoices",
+            payload: choices.map((p: { [x: string]: { [x: string]: number; }; }) => ({
+                id: p["stat"]["frontend_question_id"],
+                title: p["stat"]["question__title"],
+                titleSlug: p["stat"]["question__title_slug"],
+                difficulty: p["difficulty"]["level"] - 1
+              })
+            )
+          })
+        );
+    }
+  }, [dispatch]);
 
   return (
     <div className="App">

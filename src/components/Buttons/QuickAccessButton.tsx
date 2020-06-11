@@ -6,7 +6,7 @@ import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import {DialogStateContext} from "../../providers/DialogStateProvider";
-import {Problem, ProblemsContext} from "../../providers/ProblemProvider";
+import {ProblemDisplay, ProblemsContext} from "../../providers/ProblemProvider";
 import {selectProblems} from "../../utils/ebbinghaus";
 
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -81,7 +81,7 @@ const QuickAccessButton = () => {
     if (event.target.files) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const uploadProblems = JSON.parse(reader.result as string) as Problem[];
+        const uploadProblems = JSON.parse(reader.result as string) as ProblemDisplay[];
         if (problems.length === 0) {
           if (dispatchProblem) {
             dispatchProblem({

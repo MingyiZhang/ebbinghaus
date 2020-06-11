@@ -5,14 +5,17 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {ProblemsProvider} from "./providers/ProblemProvider";
 import {DialogStateProvider} from "./providers/DialogStateProvider";
+import {ChoicesProvider} from "./providers/ChoiceProvider";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ProblemsProvider>
-      <DialogStateProvider>
-        <App/>
-      </DialogStateProvider>
-    </ProblemsProvider>
+    <ChoicesProvider>
+      <ProblemsProvider>
+        <DialogStateProvider>
+          <App/>
+        </DialogStateProvider>
+      </ProblemsProvider>
+    </ChoicesProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

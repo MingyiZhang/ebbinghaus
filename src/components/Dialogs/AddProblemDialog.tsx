@@ -17,12 +17,14 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {InsertInvitation} from "@material-ui/icons";
-import {Problem, ProblemsContext} from "../../providers/ProblemProvider";
+import {ProblemDisplay, ProblemsContext} from "../../providers/ProblemProvider";
 import {getWeight} from "../../utils/ebbinghaus";
+import {ChoicesContext} from "../../providers/ChoiceProvider";
 
 const AddProblemDialog = () => {
   const {addProblemDialogOpen, dispatch} = useContext(DialogStateContext);
   const {dispatch: problemDispatch} = useContext(ProblemsContext);
+  const {leetCodeChoices} = useContext(ChoicesContext);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -56,10 +58,10 @@ const AddProblemDialog = () => {
     const currentTime = new Date().getTime();
     const createTime = time === null ? currentTime : time.getTime();
 
-    const problem: Problem = {
+    const problem: ProblemDisplay = {
       platform: platform,
       serial: serial,
-      name: name,
+      title: name,
       index: (serial + name).replace(" ", "").toLowerCase(),
       practice: 1,
       remember: 1,
@@ -121,7 +123,7 @@ const AddProblemDialog = () => {
               fullWidth
               required
               variant={"outlined"}
-              label={"Problem Name"}
+              label={"Problem Title"}
               value={name}
               onChange={handleChange(setName)}
             />

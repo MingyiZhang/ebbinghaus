@@ -1,7 +1,7 @@
 import React from 'react';
 import {CardContent, createStyles, Grid, LinearProgress, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import {difficulty, platform, Problem} from "../../providers/ProblemProvider";
+import {difficulty, platform, ProblemDisplay} from "../../providers/ProblemProvider";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() =>
 );
 
 export interface ProblemCardProps {
-  problem: Problem;
+  problem: ProblemDisplay;
 }
 
 const ProblemCardContent = (props: ProblemCardProps) => {
@@ -41,7 +41,7 @@ const ProblemCardContent = (props: ProblemCardProps) => {
         </Grid>
         <Grid item xs={12} style={{height: 100}}>
           <Typography variant="h5" component="h3">
-            {problem.name}
+            {problem.title}
           </Typography>
         </Grid>
         <Grid item xs={6}>

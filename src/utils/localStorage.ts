@@ -1,4 +1,4 @@
-import {Problem} from "../providers/ProblemProvider";
+import {ProblemDisplay} from "../providers/ProblemProvider";
 
 export const loadState = () => {
   try {
@@ -13,7 +13,7 @@ export const loadState = () => {
   }
 };
 
-export const saveState = (state: Problem[]) => {
+export const saveState = (state: ProblemDisplay[]) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem("state", serializedState);
@@ -22,7 +22,7 @@ export const saveState = (state: Problem[]) => {
   }
 };
 
-export const downloadToJson = (state: Problem[]) => {
+export const downloadToJson = (state: ProblemDisplay[]) => {
   const filename = "state.json";
   const contentType = "application/json;charset=utf-8;";
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {

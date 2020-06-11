@@ -7,11 +7,11 @@ type DifficultyLeetCode = 'easy' | 'medium' | 'hard';
 type DifficultyCodility = 'painless' | 'respectable'
 type Difficulty = DifficultyLeetCode | DifficultyCodility;
 
-export interface Problem {
+export interface ProblemDisplay {
   platform: number;
   serial: string;
   index: string;
-  name: string;
+  title: string;
   createTime: number;
   updateTime: number;
   practice: number;
@@ -21,25 +21,25 @@ export interface Problem {
   normCumulatedWeight: number;
 }
 
-export type sortEntry = "platform" | "serial" | "name" | "practice" | "remember" | "weight" | "difficulty";
+export type sortEntry = "platform" | "serial" | "title" | "practice" | "remember" | "weight" | "difficulty";
 
 interface SortType {
   sortEntry: sortEntry;
   isReverse: boolean;
 }
 
-type ActionType = { type: 'addProblem', payload: Problem }
-  | { type: 'addProblems', payload: Problem[] }
-  | { type: 'addSelectedProblems', payload: Problem[] }
+type ActionType = { type: 'addProblem', payload: ProblemDisplay }
+  | { type: 'addProblems', payload: ProblemDisplay[] }
+  | { type: 'addSelectedProblems', payload: ProblemDisplay[] }
   | { type: 'deleteProblem', payload: string }
-  | { type: 'updateProblem', payload: Problem }
+  | { type: 'updateProblem', payload: ProblemDisplay }
   | { type: 'deleteSelectedProblem', payload: string }
   | { type: 'updateWeightsNormCumulated' }
   | { type: 'sortProblems', payload: SortType };
 
 interface StateType {
-  selectedProblems: Array<Problem>;
-  problems: Array<Problem>;
+  selectedProblems: Array<ProblemDisplay>;
+  problems: Array<ProblemDisplay>;
   sortEntry: sortEntry;
   isReverse: boolean;
   dispatch?: Dispatch<ActionType>;
@@ -47,11 +47,11 @@ interface StateType {
 
 export const platform = ["LeetCode", "Codility"];
 export const difficulty = ["Easy", "Medium", "Hard", "Painless", "Respectable"];
-export const sortEntries: sortEntry[] = ["platform", "serial", "name", "practice", "remember", "weight", "difficulty"];
+export const sortEntries: sortEntry[] = ["platform", "serial", "title", "practice", "remember", "weight", "difficulty"];
 export const sortEntryLabels = {
   platform: "Platform",
   serial: "Serial",
-  name: "Problem Name",
+  title: "Problem Title",
   practice: "Number of Practices",
   remember: "Number of Remembered",
   weight: "Memory Intensity",
