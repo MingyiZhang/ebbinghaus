@@ -1,6 +1,6 @@
 import React, {createContext, Dispatch, ReactElement, ReactNode, useReducer} from 'react';
 
-interface LeetCodeChoice {
+export interface LeetCodeChoice {
   id: number;
   title: string;
   titleSlug: string;

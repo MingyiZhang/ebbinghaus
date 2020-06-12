@@ -40,7 +40,7 @@ const ProblemCardContent = (props: ProblemCardProps) => {
           </Typography>
         </Grid>
         <Grid item xs={12} style={{height: 100}}>
-          <Typography variant="h5" component="h3">
+          <Typography variant="h6" component="h3">
             {problem.title}
           </Typography>
         </Grid>

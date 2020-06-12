@@ -19,7 +19,8 @@ import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {InsertInvitation} from "@material-ui/icons";
 import {ProblemDisplay, ProblemsContext} from "../../providers/ProblemProvider";
 import {getWeight} from "../../utils/ebbinghaus";
-import {ChoicesContext} from "../../providers/ChoiceProvider";
+import {ChoicesContext, LeetCodeChoice} from "../../providers/ChoiceProvider";
+import {Autocomplete} from "@material-ui/lab";
 
 const AddProblemDialog = () => {
   const {addProblemDialogOpen, dispatch} = useContext(DialogStateContext);
@@ -30,7 +31,7 @@ const AddProblemDialog = () => {
 
   const [platform, setPlatform] = useState<number>(0);
   const [serial, setSerial] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [difficulty, setDifficulty] = useState<number>(0);
   const [time, setTime] = useState<Date | null>(null);
 
@@ -43,7 +44,7 @@ const AddProblemDialog = () => {
     }
     setPlatform(0);
     setSerial("");
-    setName("");
+    setTitle("");
     setDifficulty(0);
     setTime(null);
   };
@@ -54,6 +55,12 @@ const AddProblemDialog = () => {
     };
   };
 
+  const handleOnChange = (choice: LeetCodeChoice) => {
+    setSerial(choice.id.toString());
+    setTitle(choice.title);
+    setDifficulty(choice.difficulty);
+  }
+
   const handleAdd = () => {
     const currentTime = new Date().getTime();
     const createTime = time === null ? currentTime : time.getTime();
@@ -61,8 +68,8 @@ const AddProblemDialog = () => {
     const problem: ProblemDisplay = {
       platform: platform,
       serial: serial,
-      title: name,
-      index: (serial + name).replace(" ", "").toLowerCase(),
+      title: title,
+      index: (serial + title).replace(" ", "").toLowerCase(),
       practice: 1,
       remember: 1,
       difficulty: difficulty,
@@ -107,31 +114,52 @@ const AddProblemDialog = () => {
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              id={"serial"}
+            <Autocomplete
+              id="serial"
+              options={leetCodeChoices}
+              getOptionLabel={option => option.id.toString()}
+              onChange={(event, newValue) => {
+                if (newValue !== null) {
+                  handleOnChange(newValue);
+                }
+              }}
+              inputValue={serial}
               fullWidth
-              required
-              variant={"outlined"}
-              label={platform === 0 ? "Serial Number" : "Lesson Number"}
-              value={serial}
-              onChange={handleChange(setSerial)}
+              renderInput={params =>
+                <TextField
+                  {...params}
+                  required
+                  variant={"outlined"}
+                  label={platform === 0 ? "Serial Number" : "Lesson Number"}
+                />}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              id={"name"}
+            <Autocomplete
+              id="title"
+              options={leetCodeChoices}
+              getOptionLabel={option => option.title}
+              onChange={(event, newValue) => {
+                if (newValue !== null) {
+                  handleOnChange(newValue);
+                }
+              }}
+              inputValue={title}
               fullWidth
-              required
-              variant={"outlined"}
-              label={"Problem Title"}
-              value={name}
-              onChange={handleChange(setName)}
+              renderInput={params =>
+                <TextField
+                  {...params}
+                  required
+                  variant="outlined"
+                  label="Problem Title"
+                />}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             {
               platform === 0 &&
               <TextField
+                disabled={leetCodeChoices.length !== 0}
                 id={"difficulty"}
                 fullWidth
                 required
@@ -201,7 +229,7 @@ const AddProblemDialog = () => {
         </Button>
         <Button
           onClick={() => {
-            if (serial && name) {
+            if (serial && title) {
               handleAdd();
               handleClose();
             }
