@@ -1,4 +1,5 @@
 import React, {createContext, Dispatch, ReactElement, ReactNode, useReducer} from 'react';
+import data from "../data/leetcode.json";
 
 export interface LeetCodeChoice {
   id: number;
@@ -14,8 +15,16 @@ interface StateType {
   dispatch?: Dispatch<ActionType>;
 }
 
+const leetCodeChoices: LeetCodeChoice[] = data["stat_status_pairs"]
+  .map(p => ({
+    id: p["stat"]["frontend_question_id"],
+    title: p["stat"]["question__title"],
+    titleSlug: p["stat"]["question__title_slug"],
+    difficulty: p["difficulty"]["level"] - 1
+  }));
+
 const initialState: StateType = {
-  leetCodeChoices: [] as LeetCodeChoice[]
+  leetCodeChoices: leetCodeChoices
 };
 
 const reducer = (state: StateType, action: ActionType): StateType => {
