@@ -124,6 +124,9 @@ const AddProblemDialog = () => {
                 }
               }}
               inputValue={serial}
+              onInputChange={(event, newInputValue) => {
+                setSerial(newInputValue);
+              }}
               fullWidth
               renderInput={params =>
                 <TextField
@@ -145,6 +148,9 @@ const AddProblemDialog = () => {
                 }
               }}
               inputValue={title}
+              onInputChange={(event, newInputValue) => {
+                setTitle(newInputValue);
+              }}
               fullWidth
               renderInput={params =>
                 <TextField
