@@ -13,6 +13,6 @@ Check out the project's [GitHub Page](https://mingyizhang.github.io/EbbyCode).
 You need to add the problems manually.
 
 ## TODO
-- [ ] select problems using LeetCode API
+- [x] select problems using LeetCode API
 - [ ] login to LeetCode
 - [ ] obtain problems status from LeetCode 
